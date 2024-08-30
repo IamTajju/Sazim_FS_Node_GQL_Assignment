@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  UNSPECIFIED
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  dateOfBirth DateTime
+  gender      Gender
+  email       String   @unique
+  password    String
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  posts       Post[]
+
+  comments    Comment[]
+  likes       Post[]        @relation("Likes")
+  activityLog ActivityLog[]
+}
+
+model Categories {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  posts Post[]
+}
+
+model Post {
+  id Int @id @default(autoincrement())
+
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+
+  versions PostHistory[] @relation("postVersions")
+
+  currentVersion   PostHistory? @relation("currentVersion", fields: [currentVersionId], references: [id])
+  currentVersionId Int?         @unique
+
+  categories Categories[]
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  comments Comment[]
+  likes    User[]    @relation("Likes")
+
+  @@index([authorId])
+}
+
+model PostHistory {
+  id Int @id @default(autoincrement())
+
+  version Int
+  post    Post @relation("postVersions", fields: [postId], references: [id])
+  postId  Int
+
+  postAsCurrent Post? @relation("currentVersion")
+
+  content   String
+  createdAt DateTime @default(now())
+}
+
+// Comment model
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  createdAt DateTime @default(now())
+}
+
+model ActivityLog {
+  id         Int      @id @default(autoincrement())
+  actionType String
+  postId     Int?
+  commentId  Int?
+  userId     Int
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+}
