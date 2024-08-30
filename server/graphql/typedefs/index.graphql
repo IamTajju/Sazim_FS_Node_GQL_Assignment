@@ -26,7 +26,7 @@ type Mutation {
         gender: String!
         email: String!
         password: String!
-  ): User
+  ): String # JWT token as a string
 
   loginUser(email: String!, password: String!): String # JWT token as a string
 }
