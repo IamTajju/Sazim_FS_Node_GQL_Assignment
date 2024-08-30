@@ -1,0 +1,34 @@
+# Custom Scalars
+scalar Date
+
+type Query {
+    # Users
+    user(id: ID!): User
+    users: [User!]!
+
+    # # Post Queries
+    # post(id: ID!): Post
+    # posts: [Post!]!
+    # postsByUser(userId: ID!): [Post!]!
+    # postsByCurrentUser: [Post!]!
+
+    # # Comment Queries
+    # commentsOfPost(postId: ID!): [Comment!]!
+    # commentsByCurrentUser: [Comment!]!
+
+}
+
+type Mutation {
+    registerUser(
+        firstName: String!
+        lastName: String!
+        dateOfBirth: Date!
+        gender: String!
+        email: String!
+        password: String!
+  ): User
+
+  loginUser(email: String!, password: String!): String # JWT token as a string
+}
+
+

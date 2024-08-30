@@ -1,0 +1,27 @@
+# Define the Gender enum
+enum Gender {
+  MALE
+  FEMALE
+  UNSPECIFIED
+}
+
+type User {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    dateOfBirth: Date!
+    gender: Gender!
+    email: String!
+    # posts: [Post!]!
+    # comments: [Comment!]!
+    # activityLogs: [ActivityLog!]!
+}
+
+input UserCreateInput {
+    firstName: String!
+    lastName: String!
+    dateOfBirth: Date!
+    gender: Gender!
+    email: String!
+    password: String!
+}
