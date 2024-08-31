@@ -1,7 +1,6 @@
-import prisma from "../../../prisma/db.js";
-
 const userQueries = {
-    user: async (_, args) => {
+    // eslint-disable-next-line no-unused-vars
+    user: async (_, args, { user, prisma }) => {
         const { id } = args;
         try {
             const user = await prisma.user.findUnique({
@@ -14,7 +13,7 @@ const userQueries = {
         }
     },
     // eslint-disable-next-line no-unused-vars
-    users: async (_, args) => {
+    users: async (_, args, { user, prisma }) => {
         try {
             const users = await prisma.user.findMany();
             return users;

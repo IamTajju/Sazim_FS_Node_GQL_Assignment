@@ -9,7 +9,7 @@ type Query {
     # Posts
     post(id: ID!): Post
     posts: [Post!]!
-    postsByUser(userId: ID!): [Post!]!
+    postsByUser: [Post!]!
 
     # Categories
     categories: [Category]

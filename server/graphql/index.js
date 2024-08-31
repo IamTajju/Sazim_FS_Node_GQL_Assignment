@@ -4,6 +4,7 @@ import { WebSocketServer } from 'ws';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import http from 'http';
+import context from './context.js';
 
 
 const startApolloServer = async (app) => {
@@ -22,6 +23,7 @@ const startApolloServer = async (app) => {
         plugins: [
             ApolloServerPluginDrainHttpServer({ httpServer }),
         ],
+        context,
     });
 
     // wsServer.on('connection', (ws) => {

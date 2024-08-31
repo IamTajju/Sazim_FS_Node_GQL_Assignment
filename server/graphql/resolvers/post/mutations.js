@@ -1,10 +1,12 @@
-import prisma from "../../../prisma/db.js";
 import { postIncludeOptions, postMapLikesCount } from '../utils.js' // Adjust the path as needed
 import { pubsub, POST_UPDATED } from './subscriptions.js';
 
 const postMutations = {
-    createPost: async (_, { input }) => {
-        const { content, authorId, categories } = input;
+    createPost: async (_, { input }, { user, prisma }) => {
+        const { content, categories } = input;
+        if (!user) {
+            throw new Error('Not Authenticated');
+        }
 
         try {
             // Use a Prisma transaction to ensure atomicity
@@ -12,7 +14,7 @@ const postMutations = {
                 // Step 1: Create the post
                 const newPost = await prisma.post.create({
                     data: {
-                        author: { connect: { id: Number(authorId) } },
+                        author: { connect: { id: Number(user.userId) } },
                         categories: {
                             connect: categories.map(categoryId => ({ id: Number(categoryId) })),
                         },
@@ -44,18 +46,36 @@ const postMutations = {
                 where: { id: post.id },
                 include: postIncludeOptions,
             });
-
+            const postWithLikes = postMapLikesCount(postUpdated);
+            pubsub.publish(POST_UPDATED, { postUpdated: postWithLikes });
             // Map likes count to the post object
-            return postMapLikesCount(postUpdated);
+            return postWithLikes;
         } catch (error) {
             console.error(error);
             throw error;
         }
     },
 
-    updatePost: async (_, { input }) => {
+    updatePost: async (_, { input }, { user, prisma }) => {
         const { postId, content, categories } = input;
+        if (!user) {
+            throw new Error('Not Authenticated');
+        }
         try {
+            // Check if the user is the author of the post
+            const checkPost = await prisma.post.findUnique({
+                where: { id: Number(postId) },
+                select: { authorId: true } // Fetch only the authorId
+            });
+
+            if (!checkPost) {
+                throw new Error('Post not found');
+            }
+
+            if (checkPost.authorId !== user.userId) {
+                throw new Error('Not authorized to update this post');
+            }
+
             // Start a transaction
             const post = await prisma.$transaction(async (tx) => {
                 let postHistoryId;
@@ -101,9 +121,25 @@ const postMutations = {
         }
     },
 
-    revertToPreviousVersion: async (_, { input }) => {
+    revertToPreviousVersion: async (_, { input }, { user, prisma }) => {
         const { postId, postHistoryId } = input
+        if (!user) {
+            throw new Error('Not Authenticated');
+        }
         try {
+            // Check if the user is the author of the post
+            const post = await prisma.post.findUnique({
+                where: { id: Number(postId) },
+                select: { authorId: true } // Fetch only the authorId
+            });
+
+            if (!post) {
+                throw new Error('Post not found');
+            }
+
+            if (post.authorId !== user.userId) {
+                throw new Error('Not authorized to update this post');
+            }
             // Fetch the specified PostHistory entry and ensure it's associated with the given postId
             const postHistory = await prisma.postHistory.findUnique({
                 where: { id: Number(postHistoryId) },

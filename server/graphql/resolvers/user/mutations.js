@@ -1,4 +1,3 @@
-import prisma from "../../../prisma/db.js";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
@@ -13,7 +12,8 @@ if (!JWT_SECRET) {
 }
 
 const userMutations = {
-    registerUser: async (_, { registerInput }) => {
+    // eslint-disable-next-line no-unused-vars
+    registerUser: async (_, { registerInput }, { user, prisma }) => {
         const { firstName, lastName, dateOfBirth, gender, email, password, confirmPassword } = registerInput;
 
         // Validate passwords
@@ -54,7 +54,8 @@ const userMutations = {
         }
     },
 
-    loginUser: async (_, args) => {
+    // eslint-disable-next-line no-unused-vars
+    loginUser: async (_, args, { user, prisma }) => {
         const { email, password } = args;
         try {
             // Find user (make this findUNIQUE OR THROW)

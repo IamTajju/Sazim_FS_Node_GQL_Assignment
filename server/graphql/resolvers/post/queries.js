@@ -1,9 +1,11 @@
-import prisma from "../../../prisma/db.js";
 import { postIncludeOptions, postMapLikesCount } from "../utils.js";
 
 const postQueries = {
-    post: async (_, args) => {
+    post: async (_, args, { user, prisma }) => {
         const { id } = args;
+        if (!user) {
+            throw new Error('Not Authenticated');
+        }
         try {
             const post = await prisma.post.findUnique({
                 where: { id: Number(id) },
@@ -16,10 +18,10 @@ const postQueries = {
         }
     },
 
-
-
-    // eslint-disable-next-line no-unused-vars
-    posts: async (_, args) => {
+    posts: async (_, args, { user, prisma }) => {
+        if (!user) {
+            throw new Error('Not Authenticated');
+        }
         try {
             const posts = await prisma.post.findMany({
                 include: postIncludeOptions
@@ -33,11 +35,13 @@ const postQueries = {
         }
     },
 
-    postsByUser: async (_, args) => {
-        const { userId } = args;
+    postsByUser: async (_, args, { user, prisma }) => {
+        if (!user) {
+            throw new Error('Not Authenticated');
+        }
         try {
             const postsByUser = await prisma.post.findMany({
-                where: { authorId: Number(userId) },
+                where: { authorId: Number(user.userId) },
                 include: postIncludeOptions
             });
             // Use helper function to transform the posts
