@@ -1,15 +1,13 @@
-// eslint-disable-next-line no-unused-vars
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useMemo } from 'react';
-import PropTypes from 'prop-types'; // Import prop-types for props validation
+import PropTypes from 'prop-types';
 import { FormProvider, useForm } from 'react-hook-form';
-import { TextField, Button, MenuItem, Select, InputLabel, FormControl, CircularProgress } from '@mui/material';
-
+import { TextField, Button, MenuItem, Select, InputLabel, FormControl, CircularProgress, Box } from '@mui/material';
 
 const formatLabel = (fieldName) => {
-    // Split camel case into words and capitalize the first word
     return fieldName
-        .replace(/([A-Z])/g, ' $1') // Add space before uppercase letters
-        .replace(/^./, str => str.toUpperCase()); // Capitalize the first letter
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/^./, str => str.toUpperCase());
 };
 
 // Define the Form component
@@ -18,7 +16,7 @@ const Form = ({ fields, defaultValues, showBackButton, onSubmit, onBack, buttonT
         defaultValues: useMemo(() => defaultValues, [defaultValues]),
     });
 
-    const { handleSubmit, register, reset, formState: { errors } } = formInstance;
+    const { handleSubmit, register, reset, setValue, getValues, formState: { errors } } = formInstance;
 
     useEffect(() => {
         reset(defaultValues);
@@ -31,26 +29,26 @@ const Form = ({ fields, defaultValues, showBackButton, onSubmit, onBack, buttonT
 
     // Render Material UI components based on field type with error handling
     const renderField = (field) => {
-        const fieldError = errors[field.name]; // Get error for the current field
+        const fieldError = errors[field.name];
 
         switch (field.type) {
             case 'text':
             case 'email':
             case 'number':
             case 'password':
-            case 'confirmPassword': // Added password case
+            case 'confirmPassword':
                 return (
                     <TextField
                         key={field.name}
                         label={formatLabel(field.name)}
-                        type={field.type === 'password' || field.type === 'confirmPassword' ? 'password' : 'text'} // Set type for password
+                        type={field.type === 'password' || field.type === 'confirmPassword' ? 'password' : 'text'}
                         variant="outlined"
                         fullWidth
                         margin="normal"
-                        error={!!fieldError} // Show error if there is one
-                        helperText={fieldError ? fieldError.message : ''} // Display error message
+                        error={!!fieldError}
+                        helperText={fieldError ? fieldError.message : ''}
                         {...register(field.name, {
-                            required: 'This field is required', // Example validation rule
+                            required: 'This field is required',
                             ...(field.type === 'email' && {
                                 pattern: {
                                     value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
@@ -65,12 +63,12 @@ const Form = ({ fields, defaultValues, showBackButton, onSubmit, onBack, buttonT
                                 },
                             }),
                             ...(field.type === 'confirmPassword' && {
-                                validate: (value) => value === formInstance.getValues('password') || 'Passwords do not match',
+                                validate: (value) => value === getValues('password') || 'Passwords do not match',
                             }),
                         })}
                     />
                 );
-            case 'date': // Added date case
+            case 'date':
                 return (
                     <TextField
                         key={field.name}
@@ -79,15 +77,15 @@ const Form = ({ fields, defaultValues, showBackButton, onSubmit, onBack, buttonT
                         variant="outlined"
                         fullWidth
                         margin="normal"
-                        InputLabelProps={{ shrink: true }} // Ensure label is not cut off for date inputs
+                        InputLabelProps={{ shrink: true }}
                         error={!!fieldError}
                         helperText={fieldError ? fieldError.message : ''}
                         {...register(field.name, {
-                            required: 'This field is required', // Example validation rule
+                            required: 'This field is required',
                         })}
                     />
                 );
-            case 'select': // Added select case
+            case 'select':
                 return (
                     <FormControl
                         key={field.name}
@@ -101,7 +99,36 @@ const Form = ({ fields, defaultValues, showBackButton, onSubmit, onBack, buttonT
                             label={field.name}
                             defaultValue={defaultValues[field.name] || ''}
                             {...register(field.name, {
-                                required: 'This field is required', // Example validation rule
+                                required: 'This field is required',
+                            })}
+                        >
+                            {field.options.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        {fieldError && <p style={{ color: 'red' }}>{fieldError.message}</p>}
+                    </FormControl>
+                );
+
+            case 'select-multiple':
+                return (
+                    <FormControl
+                        key={field.name}
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        error={!!fieldError}
+                    >
+                        <InputLabel>{formatLabel(field.name)}</InputLabel>
+                        <Select
+                            multiple
+                            value={getValues(field.name) || []} // Ensure the value is an array
+                            // onChange={(e) => setValue(e.target.value)}
+                            renderValue={(selected) => selected.map(id => field.options.find(option => option.value === id)?.label).join(', ')}
+                            {...register(field.name, {
+                                required: 'This field is required',
                             })}
                         >
                             {field.options.map((option) => (
@@ -121,8 +148,8 @@ const Form = ({ fields, defaultValues, showBackButton, onSubmit, onBack, buttonT
                         variant="outlined"
                         fullWidth
                         margin="normal"
-                        error={!!fieldError} // Show error if there is one
-                        helperText={fieldError ? fieldError.message : ''} // Display error message
+                        error={!!fieldError}
+                        helperText={fieldError ? fieldError.message : ''}
                         {...register(field.name)}
                     />
                 );
@@ -133,10 +160,12 @@ const Form = ({ fields, defaultValues, showBackButton, onSubmit, onBack, buttonT
         <FormProvider {...formInstance}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 {fields.map(renderField)}
-                {isLoading ? ( // Conditionally render CircularProgress or buttons
-                    <CircularProgress />
+                {isLoading ? (
+                    <Box display="flex" justifyContent="center" alignItems="center" marginTop={2}>
+                        <CircularProgress />
+                    </Box>
                 ) : (
-                    <>
+                    <Box display="flex" justifyContent="space-between" marginTop={2}>
                         {showBackButton && (
                             <Button variant="contained" onClick={handleBack} style={{ marginRight: 16 }}>
                                 Back
@@ -145,7 +174,7 @@ const Form = ({ fields, defaultValues, showBackButton, onSubmit, onBack, buttonT
                         <Button variant="contained" type="submit">
                             {buttonText}
                         </Button>
-                    </>
+                    </Box>
                 )}
             </form>
         </FormProvider>
@@ -157,13 +186,13 @@ Form.propTypes = {
     fields: PropTypes.arrayOf(
         PropTypes.shape({
             name: PropTypes.string.isRequired,
-            type: PropTypes.string, // Optional, defaults to 'text' if not provided
+            type: PropTypes.string,
             options: PropTypes.arrayOf(
                 PropTypes.shape({
                     value: PropTypes.string.isRequired,
                     label: PropTypes.string.isRequired
                 })
-            ), // For select fields
+            ),
         })
     ).isRequired,
     defaultValues: PropTypes.object.isRequired,
@@ -171,7 +200,7 @@ Form.propTypes = {
     onSubmit: PropTypes.func.isRequired,
     onBack: PropTypes.func.isRequired,
     buttonText: PropTypes.string.isRequired,
-    isLoading: PropTypes.bool, // Add prop for button text
+    isLoading: PropTypes.bool,
 };
 
 export default Form;
