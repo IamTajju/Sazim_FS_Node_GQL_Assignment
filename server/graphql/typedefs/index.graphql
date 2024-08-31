@@ -23,6 +23,13 @@ type Mutation {
     registerUser(registerInput: UserCreateInput): AuthPayload # JWT token as a string
     loginUser(email: String!, password: String!): AuthPayload # JWT token as a string
     createPost(input: CreatePostInput!): Post!
+    updatePost(input: UpdatePostInput!): Post!
+    revertToPreviousVersion(postId: ID!, versionId: ID!): Post!
+
+}
+
+type Subscription {
+  postUpdated: Post!
 }
 
 

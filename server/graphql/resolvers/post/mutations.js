@@ -1,5 +1,6 @@
 import prisma from "../../../prisma/db.js";
 import { postIncludeOptions, postMapLikesCount } from '../utils.js' // Adjust the path as needed
+import { pubsub, POST_UPDATED } from './subscriptions.js';
 
 const postMutations = {
     createPost: async (_, { input }) => {
@@ -51,6 +52,95 @@ const postMutations = {
             throw error;
         }
     },
+
+    updatePost: async (_, { input }) => {
+        const { postId, content, categories } = input;
+        try {
+            // Start a transaction
+            const post = await prisma.$transaction(async (tx) => {
+                let postHistoryId;
+
+                // If content is provided, create a new PostHistory
+                if (content) {
+                    const history = await tx.postHistory.create({
+                        data: {
+                            content,
+                            post: { connect: { id: Number(postId) } }
+                        }
+                    });
+                    postHistoryId = history.id;
+                }
+
+                // Update the post
+                const updatedPost = await tx.post.update({
+                    where: { id: Number(postId) },
+                    data: {
+                        // Update currentVersion if content is provided
+                        currentVersion: content
+                            ? { connect: { id: postHistoryId } }
+                            : undefined,
+                        // Update categories if provided
+                        categories: categories
+                            ? { set: categories.map(categoryId => ({ id: Number(categoryId) })) }
+                            : undefined
+                    },
+                    include: postIncludeOptions,
+                });
+
+                return updatedPost;
+            });
+
+            // Map likes count and publish the updated post
+            const postWithLikes = postMapLikesCount(post);
+            pubsub.publish(POST_UPDATED, { postUpdated: postWithLikes });
+
+            return postWithLikes;
+        } catch (error) {
+            console.error(error);
+            throw new Error('Failed to update post');
+        }
+    },
+
+    revertToPreviousVersion: async (_, { input }) => {
+        const { postId, postHistoryId } = input
+        try {
+            // Fetch the specified PostHistory entry and ensure it's associated with the given postId
+            const postHistory = await prisma.postHistory.findUnique({
+                where: { id: Number(postHistoryId) },
+                include: {
+                    post: true // Include the post associated with this history entry
+                }
+            });
+
+            if (!postHistory) {
+                throw new Error('PostHistory entry not found');
+            }
+
+            // Check if the PostHistory entry is associated with the provided postId
+            if (postHistory.postId !== Number(postId)) {
+                throw new Error('PostHistory entry does not belong to the provided postId');
+            }
+
+            // Update the post's currentVersion to the specified PostHistory entry
+            const updatedPost = await prisma.post.update({
+                where: { id: Number(postId) },
+                data: {
+                    currentVersion: { connect: { id: Number(postHistoryId) } }
+                },
+                include: postIncludeOptions
+            });
+
+            // Map likes count and publish the updated post
+            const postWithLikes = postMapLikesCount(updatedPost);
+            pubsub.publish(POST_UPDATED, { postUpdated: postWithLikes });
+
+            return postWithLikes;
+        } catch (error) {
+            console.error(error);
+            throw new Error('Failed to revert to previous version');
+        }
+    }
 };
+
 
 export default postMutations;

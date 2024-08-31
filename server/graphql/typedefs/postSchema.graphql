@@ -21,3 +21,10 @@ input CreatePostInput {
   authorId: ID!
   categories: [ID!]!
 }
+
+input UpdatePostInput {
+  postId: ID!
+  content: String
+  categories: [ID]
+}
+
