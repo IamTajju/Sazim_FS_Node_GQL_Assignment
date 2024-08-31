@@ -5,7 +5,7 @@ import React, { useMemo, useState } from 'react';
 import Form from './form'; // Import the Form component
 import PropTypes from 'prop-types';
 
-const FormWizard = ({ steps, defaultValues, onSubmit }) => {
+const FormWizard = ({ steps, defaultValues, onSubmit, isLoading }) => {
     const [values, setValues] = useState({});
     const [activeStepIndex, setActiveStepIndex] = useState(0);
 
@@ -51,6 +51,7 @@ const FormWizard = ({ steps, defaultValues, onSubmit }) => {
                 onSubmit={handleNextStep}
                 onBack={handleBackStep}
                 buttonText={isLastStep ? 'Submit' : 'Next'}
+                isLoading={isLoading}
             />
         </div>
     );
@@ -71,6 +72,7 @@ FormWizard.propTypes = {
     ).isRequired,
     defaultValues: PropTypes.object.isRequired,
     onSubmit: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool,
 };
 
 export default FormWizard;

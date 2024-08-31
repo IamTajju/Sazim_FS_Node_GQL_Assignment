@@ -2,28 +2,20 @@
 import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types'; // Import prop-types for props validation
 import { FormProvider, useForm } from 'react-hook-form';
-import { TextField, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { TextField, Button, MenuItem, Select, InputLabel, FormControl, CircularProgress } from '@mui/material';
+
+
+const formatLabel = (fieldName) => {
+    // Split camel case into words and capitalize the first word
+    return fieldName
+        .replace(/([A-Z])/g, ' $1') // Add space before uppercase letters
+        .replace(/^./, str => str.toUpperCase()); // Capitalize the first letter
+};
 
 // Define the Form component
-const Form = ({ fields, defaultValues, showBackButton, onSubmit, onBack, buttonText }) => {
+const Form = ({ fields, defaultValues, showBackButton, onSubmit, onBack, buttonText, isLoading }) => {
     const formInstance = useForm({
         defaultValues: useMemo(() => defaultValues, [defaultValues]),
-        // Add custom validation resolver
-        resolver: async (values) => {
-            const errors = {};
-            // Loop through fields to handle custom validation
-            fields.forEach(field => {
-                if (field.type === 'confirmPassword') {
-                    if (values.password !== values[field.name]) {
-                        errors[field.name] = {
-                            type: 'validate',
-                            message: 'Passwords must match',
-                        };
-                    }
-                }
-            });
-            return { values, errors };
-        },
     });
 
     const { handleSubmit, register, reset, formState: { errors } } = formInstance;
@@ -45,12 +37,13 @@ const Form = ({ fields, defaultValues, showBackButton, onSubmit, onBack, buttonT
             case 'text':
             case 'email':
             case 'number':
-            case 'password': // Added password case
+            case 'password':
+            case 'confirmPassword': // Added password case
                 return (
                     <TextField
                         key={field.name}
-                        label={field.name}
-                        type={field.type === 'password' ? 'password' : 'text'} // Set type for password
+                        label={formatLabel(field.name)}
+                        type={field.type === 'password' || field.type === 'confirmPassword' ? 'password' : 'text'} // Set type for password
                         variant="outlined"
                         fullWidth
                         margin="normal"
@@ -71,6 +64,9 @@ const Form = ({ fields, defaultValues, showBackButton, onSubmit, onBack, buttonT
                                     message: 'Number must be non-negative',
                                 },
                             }),
+                            ...(field.type === 'confirmPassword' && {
+                                validate: (value) => value === formInstance.getValues('password') || 'Passwords do not match',
+                            }),
                         })}
                     />
                 );
@@ -78,7 +74,7 @@ const Form = ({ fields, defaultValues, showBackButton, onSubmit, onBack, buttonT
                 return (
                     <TextField
                         key={field.name}
-                        label={field.name}
+                        label={formatLabel(field.name)}
                         type="date"
                         variant="outlined"
                         fullWidth
@@ -100,10 +96,10 @@ const Form = ({ fields, defaultValues, showBackButton, onSubmit, onBack, buttonT
                         margin="normal"
                         error={!!fieldError}
                     >
-                        <InputLabel>{field.name}</InputLabel>
+                        <InputLabel>{formatLabel(field.name)}</InputLabel>
                         <Select
                             label={field.name}
-                            defaultValue=""
+                            defaultValue={defaultValues[field.name] || ''}
                             {...register(field.name, {
                                 required: 'This field is required', // Example validation rule
                             })}
@@ -137,14 +133,20 @@ const Form = ({ fields, defaultValues, showBackButton, onSubmit, onBack, buttonT
         <FormProvider {...formInstance}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 {fields.map(renderField)}
-                {showBackButton && (
-                    <Button variant="contained" onClick={handleBack} style={{ marginRight: 16 }}>
-                        Back
-                    </Button>
+                {isLoading ? ( // Conditionally render CircularProgress or buttons
+                    <CircularProgress />
+                ) : (
+                    <>
+                        {showBackButton && (
+                            <Button variant="contained" onClick={handleBack} style={{ marginRight: 16 }}>
+                                Back
+                            </Button>
+                        )}
+                        <Button variant="contained" type="submit">
+                            {buttonText}
+                        </Button>
+                    </>
                 )}
-                <Button variant="contained" type="submit">
-                    {buttonText}
-                </Button>
             </form>
         </FormProvider>
     );
@@ -168,7 +170,8 @@ Form.propTypes = {
     showBackButton: PropTypes.bool,
     onSubmit: PropTypes.func.isRequired,
     onBack: PropTypes.func.isRequired,
-    buttonText: PropTypes.string.isRequired, // Add prop for button text
+    buttonText: PropTypes.string.isRequired,
+    isLoading: PropTypes.bool, // Add prop for button text
 };
 
 export default Form;

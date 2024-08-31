@@ -24,4 +24,9 @@ input UserCreateInput {
     gender: Gender!
     email: String!
     password: String!
+    confirmPassword: String!
+}
+
+type AuthPayload {
+    token: String
 }

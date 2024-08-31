@@ -12,7 +12,7 @@ export default function NavBar() {
             <AppBar position="static" color='primary'>
                 <Toolbar>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        Sazim FS Blogging App
+                        Blogging App
                     </Typography>
                     <Button color="inherit" href='/login'>Login</Button>
                     <Button color="inherit" href='/register'>Register</Button>

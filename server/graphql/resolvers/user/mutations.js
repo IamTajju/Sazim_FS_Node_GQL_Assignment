@@ -13,9 +13,24 @@ if (!JWT_SECRET) {
 }
 
 const userMutations = {
-    registerUser: async (_, args) => {
-        const { firstName, lastName, dateOfBirth, gender, email, password } = args;
+    registerUser: async (_, { registerInput }) => {
+        const { firstName, lastName, dateOfBirth, gender, email, password, confirmPassword } = registerInput;
+
+        // Validate passwords
+        if (password !== confirmPassword) {
+            throw new Error('Passwords do not match!');
+        }
+
         try {
+            // Check if email already exists
+            const existingUser = await prisma.user.findUnique({
+                where: { email },
+            });
+
+            if (existingUser) {
+                throw new Error('User with this email already exists');
+            }
+
             const newUser = await prisma.user.create({
                 data: {
                     firstName,
@@ -29,11 +44,13 @@ const userMutations = {
 
             // Generate JWT token
             const token = jwt.sign({ userId: newUser.id }, JWT_SECRET, { expiresIn: '1h' });
-            return token;
+            return {
+                token: token,
+            };
 
         } catch (error) {
             console.error(error);
-            throw new Error('Error registering user');
+            throw error;
         }
     },
 
@@ -56,7 +73,7 @@ const userMutations = {
             return token;
         } catch (error) {
             console.error(error);
-            throw new Error('Error logging in user');
+            throw error;
         }
     },
 };
