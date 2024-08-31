@@ -96,12 +96,14 @@ const HomePage = () => {
                     <PostCard
                         key={post.id}
                         post={post}
+                        inPage={false}
                     />
                 ))}
             </Box>
             <PostMutationModal
                 open={modalOpen}
                 onClose={handleCloseModal}
+                isEditMode={false}
             />
         </Container>
     );

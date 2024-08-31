@@ -5,6 +5,7 @@ import NavBar from './components/common/navbar';
 import RegistrationPage from './pages/registrationPage';
 import { CategoriesProvider } from './context/categoriesContext';
 import PrivateRoutes from './components/auth/protectedRoute';
+import PostPage from './pages/postPage';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route element={<PrivateRoutes />}>
             <Route path="/" element={<HomePage />} />
+            <Route path="/post/:id" element={<PostPage />} />
 
           </Route>
           <Route path="/login" element={<LoginPage />} />

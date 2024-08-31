@@ -5,13 +5,14 @@ import PropTypes from 'prop-types';
 import EditIcon from '@mui/icons-material/Edit';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import CommentIcon from '@mui/icons-material/Comment';
+import DeleteIcon from '@mui/icons-material/Delete';
 import PostMutationModal from './postMutationModal';
 import { AuthContext } from '../../context/authContext';
 
 
 
-export default function PostCard({ post }) {
-    const { author, currentVersion, categories, likes } = post;
+export default function PostCard({ post, inPage }) {
+    const {id, author, currentVersion, categories, likes } = post;
     const [modalOpen, setModalOpen] = useState(false);
     const { user } = useContext(AuthContext);
     // eslint-disable-next-line no-unused-vars
@@ -71,14 +72,23 @@ export default function PostCard({ post }) {
                             <IconButton aria-label="like">
                                 <ThumbUpAltIcon />
                             </IconButton>
-                            <Typography variant="body2">{likes}</Typography>
+                            <Typography variant="body2">{likes} likes</Typography>
                         </Grid2>
-                        <Grid2 container item alignItems="center" justifyContent="space-between">
-                            <IconButton aria-label="comments">
-                                <CommentIcon />
-                            </IconButton>
-                            <Link href="#comments" underline="none">View comments</Link>
-                        </Grid2>
+                        {!inPage ? (
+                            <Grid2 container item alignItems="center" justifyContent="space-between">
+                                <IconButton aria-label="comments">
+                                    <CommentIcon />
+                                </IconButton>
+                                <Link href={`/post/${id}`} underline="none">View comments</Link>
+                            </Grid2>
+                        ) : isAuthor && (
+                            <Grid2 container item alignItems="center" justifyContent="space-between">
+                                <IconButton aria-label="delete" color="error">
+                                    <DeleteIcon />
+                                </IconButton>
+                                {/* Optionally add more elements or functionality here */}
+                            </Grid2>
+                        )}
                     </Grid2>
                 </CardContent>
             </Card>
@@ -96,6 +106,7 @@ export default function PostCard({ post }) {
 // PropTypes validation
 PostCard.propTypes = {
     post: PropTypes.shape({
+        id: PropTypes.string.isRequired,
         author: PropTypes.shape({
             id: PropTypes.string.isRequired,
             firstName: PropTypes.string.isRequired,
@@ -112,4 +123,5 @@ PostCard.propTypes = {
         ).isRequired,
         likes: PropTypes.number.isRequired,
     }).isRequired,
+    inPage: PropTypes.bool,
 };
