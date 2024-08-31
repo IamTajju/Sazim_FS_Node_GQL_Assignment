@@ -3,6 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useMemo, useState } from 'react';
 import Form from './form'; // Import the Form component
+import { Stepper, Step, StepLabel, Box } from '@mui/material';
 import PropTypes from 'prop-types';
 
 const FormWizard = ({ steps, defaultValues, onSubmit, isLoading }) => {
@@ -42,18 +43,27 @@ const FormWizard = ({ steps, defaultValues, onSubmit, isLoading }) => {
     }
 
     return (
-        <div>
-            <Form
-                key={activeStep.id} // Important: Key helps React keep track of form instances
-                fields={activeStep.fields}
-                defaultValues={{ ...defaultValues, ...values }}
-                showBackButton={activeStepIndex > 0}
-                onSubmit={handleNextStep}
-                onBack={handleBackStep}
-                buttonText={isLastStep ? 'Submit' : 'Next'}
-                isLoading={isLoading}
-            />
-        </div>
+        <Box>
+            <Box mt={2} mb={5}>
+                <Form
+                    key={activeStep.id} // Important: Key helps React keep track of form instances
+                    fields={activeStep.fields}
+                    defaultValues={{ ...defaultValues, ...values }}
+                    showBackButton={activeStepIndex > 0}
+                    onSubmit={handleNextStep}
+                    onBack={handleBackStep}
+                    buttonText={isLastStep ? 'Submit' : 'Next'}
+                    isLoading={isLoading}
+                />
+            </Box>
+            <Stepper activeStep={activeStepIndex} alternativeLabel>
+                {steps.map((step, index) => (
+                    <Step key={index}>
+                        <StepLabel>{step.id}</StepLabel>
+                    </Step>
+                ))}
+            </Stepper>
+        </Box>
     );
 };
 

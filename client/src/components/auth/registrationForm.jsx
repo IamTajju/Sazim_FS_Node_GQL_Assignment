@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState } from 'react'
 import FormWizard from '../common/multiStepForm';
 import { AuthContext } from '../../context/authContext';
 import { useMutation } from '@apollo/react-hooks';
@@ -59,14 +59,14 @@ export default function RegistrationForm() {
     // Define the steps for the form wizard
     const steps = [
         {
-            id: 'step1',
+            id: 'Name',
             fields: [
                 { name: 'firstName', type: 'text', required: true },
                 { name: 'lastName', type: 'text' },
             ],
         },
         {
-            id: 'step2',
+            id: 'Particulars',
             fields: [
                 { name: 'dateOfBirth', type: 'date' },
                 {
@@ -82,7 +82,7 @@ export default function RegistrationForm() {
             ],
         },
         {
-            id: 'step3',
+            id: 'Credentials',
             fields: [
                 { name: 'email', type: 'email' },
                 { name: 'password', type: 'password' },

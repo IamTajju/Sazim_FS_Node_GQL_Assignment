@@ -70,7 +70,9 @@ const userMutations = {
             // Generate JWT token
             const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
 
-            return token;
+            return {
+                token: token,
+            }
         } catch (error) {
             console.error(error);
             throw error;
