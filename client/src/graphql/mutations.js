@@ -27,6 +27,28 @@ export const UPDATE_POST = gql`
                 id
                 name
             }
+            updatedAt
+            createdAt
+            likes
+        }
+    }
+`;
+
+
+export const CREATE_POST = gql`
+    mutation CreatePost($input: CreatePostInput!) {
+        createPost(input: $input) {
+            id
+            currentVersion {
+                content
+            }
+            categories {
+                id
+                name
+            }
+            updatedAt
+            createdAt
+            likes
         }
     }
 `;

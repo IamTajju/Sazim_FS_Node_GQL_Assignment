@@ -8,7 +8,6 @@ import { GET_POSTS } from '../graphql/queries';
 import { POST_UPDATED } from '../graphql/subscriptions';
 
 
-
 const HomePage = () => {
     const { data, loading, error, subscribeToMore } = useQuery(GET_POSTS);
     const { data: subscriptionData } = useSubscription(POST_UPDATED);
