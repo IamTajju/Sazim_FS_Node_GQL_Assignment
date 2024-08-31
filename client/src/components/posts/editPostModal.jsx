@@ -1,25 +1,11 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
-import { useMutation, gql } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import PropTypes from 'prop-types';
 import { Box, Button, MenuItem, TextField, Select, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useCategories } from '../../context/categoriesContext';
+import { UPDATE_POST } from '../../graphql/mutations';
 
-// Define the mutation in the same file
-const UPDATE_POST = gql`
-    mutation UpdatePost($input: UpdatePostInput!) {
-        updatePost(input: $input) {
-            id
-            currentVersion {
-                content
-            }
-            categories {
-                id
-                name
-            }
-        }
-    }
-`;
 
 const EditPostModal = ({ open, onClose, post }) => {
     const categories = useCategories();

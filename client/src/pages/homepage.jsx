@@ -1,54 +1,12 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
-import { useQuery, useSubscription, gql } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 import PostCard from '../components/posts/postCard';
 import { Container, Box } from '@mui/material';
+import { GET_POSTS } from '../graphql/queries';
 
-// Define the query to fetch all posts
-const GET_POSTS = gql`
-  query Posts {
-    posts {
-      id
-      author {
-        id
-        firstName
-        lastName
-      }
-      currentVersion {
-        content
-      }
-      categories {
-        id
-        name
-      }
-      updatedAt
-      createdAt
-      likes
-    }
-  }
-`;
+import { POST_UPDATED } from '../graphql/subscriptions';
 
-// Define the subscription to listen for post updates
-const POST_UPDATED = gql`
-  subscription PostUpdated {
-    postUpdated {
-      id
-      author {
-        firstName
-        lastName
-      }
-      currentVersion {
-        content
-      }
-      categories {
-        name
-      }
-      updatedAt
-      createdAt
-      likes
-    }
-  }
-`;
 
 
 const HomePage = () => {

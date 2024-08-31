@@ -3,19 +3,10 @@ import React, { useContext, useState } from 'react'
 import FormWizard from '../common/multiStepForm';
 import { AuthContext } from '../../context/authContext';
 import { useMutation } from '@apollo/react-hooks';
-import { gql } from 'graphql-tag';
+import { REGISTER_USER } from '../../graphql/mutations';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Container } from '@mui/material';
 
-
-
-const REGISTER_USER = gql`
-    mutation RegisterUser($registerInput: UserCreateInput!) {
-        registerUser(registerInput: $registerInput) {
-            token
-        }
-    }
-`;
 
 export default function RegistrationForm() {
 

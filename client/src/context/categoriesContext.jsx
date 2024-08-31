@@ -2,17 +2,8 @@
 // eslint-disable-next-line no-unused-vars
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useQuery, gql } from '@apollo/client';
-
-// Define the query to fetch all categories
-const GET_CATEGORIES = gql`
-  query Categories {
-    categories {
-      id
-      name
-    }
-  }
-`;
+import { useQuery } from '@apollo/client';
+import { GET_CATEGORIES } from '../graphql/queries';
 
 // Create a context for categories
 const CategoriesContext = createContext();

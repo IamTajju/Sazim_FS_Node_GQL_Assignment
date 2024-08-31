@@ -2,18 +2,10 @@
 import React, { useContext, useState } from 'react'
 import { AuthContext } from '../../context/authContext';
 import { useMutation } from '@apollo/react-hooks';
-import { gql } from 'graphql-tag';
+import { LOGIN_USER } from '../../graphql/mutations';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Container } from '@mui/material';
 import Form from '../common/form';
-
-const LOGIN_USER = gql`
-  mutation LoginUser($email: String!, $password: String!) {
-    loginUser(email: $email, password: $password) {
-      token
-    }
-  }
-`;
 
 
 export default function LoginForm() {
