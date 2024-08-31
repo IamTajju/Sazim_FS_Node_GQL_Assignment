@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import EditIcon from '@mui/icons-material/Edit';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import CommentIcon from '@mui/icons-material/Comment';
-import PostModal from './postModal';
+import PostMutationModal from './postMutationModal';
 import { AuthContext } from '../../context/authContext';
 
 
@@ -82,7 +82,7 @@ export default function PostCard({ post }) {
                     </Grid2>
                 </CardContent>
             </Card>
-            <PostModal
+            <PostMutationModal
                 open={modalOpen}
                 onClose={handleCloseModal}
                 post={post}

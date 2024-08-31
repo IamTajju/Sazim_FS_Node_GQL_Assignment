@@ -2,15 +2,26 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useSubscription } from '@apollo/client';
 import PostCard from '../components/posts/postCard';
-import { Container, Box } from '@mui/material';
+import { Container, Box, Button } from '@mui/material';
 import { GET_POSTS } from '../graphql/queries';
-
+import PostMutationModal from '../components/posts/postMutationModal';
 import { POST_UPDATED } from '../graphql/subscriptions';
 
 
 const HomePage = () => {
     const { data, loading, error, subscribeToMore } = useQuery(GET_POSTS);
     const { data: subscriptionData } = useSubscription(POST_UPDATED);
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
+    };
+
+    const handleCreatePostClick = () => {
+        setModalOpen(true);
+    };
+
+
 
 
     const [posts, setPosts] = useState([]);
@@ -71,6 +82,9 @@ const HomePage = () => {
         <Container maxWidth="md" justifyContent="center"> {/* Center content with maxWidth */}
             <Box textAlign="center" marginBottom={4}>
                 <h1>All Posts</h1>
+                <Button variant="contained" onClick={handleCreatePostClick}>
+                    Create New Post
+                </Button>
             </Box>
             <Box
                 display="flex"
@@ -85,6 +99,10 @@ const HomePage = () => {
                     />
                 ))}
             </Box>
+            <PostMutationModal
+                open={modalOpen}
+                onClose={handleCloseModal}
+            />
         </Container>
     );
 };

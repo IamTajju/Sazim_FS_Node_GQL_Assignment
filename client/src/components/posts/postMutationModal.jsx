@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import PropTypes from 'prop-types';
-import { Box, Button, MenuItem, TextField, Select, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Box, Button, MenuItem, InputLabel, TextField, Select, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useCategories } from '../../context/categoriesContext';
 import { CREATE_POST, UPDATE_POST } from '../../graphql/mutations';
 
-const PostModal = ({ open, onClose, post, isEditMode }) => {
+const PostMutationModal = ({ open, onClose, post, isEditMode }) => {
     const categories = useCategories();
 
     const [content, setContent] = useState('');
@@ -50,6 +50,7 @@ const PostModal = ({ open, onClose, post, isEditMode }) => {
                     onChange={(e) => setContent(e.target.value)}
                 />
                 <Box my={2}></Box>
+                <InputLabel>Category</InputLabel>
                 <Select
                     multiple
                     value={selectedCategories}
@@ -75,7 +76,7 @@ const PostModal = ({ open, onClose, post, isEditMode }) => {
 };
 
 // PropTypes validation
-PostModal.propTypes = {
+PostMutationModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     post: PropTypes.shape({
@@ -94,8 +95,8 @@ PostModal.propTypes = {
 };
 
 // Default props
-PostModal.defaultProps = {
+PostMutationModal.defaultProps = {
     post: null,
 };
 
-export default PostModal;
+export default PostMutationModal;
