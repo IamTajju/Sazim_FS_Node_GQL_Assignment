@@ -1,17 +1,21 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Card, CardContent, Typography, Chip, IconButton, Grid2, Link } from '@mui/material';
 import PropTypes from 'prop-types';
 import EditIcon from '@mui/icons-material/Edit';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import CommentIcon from '@mui/icons-material/Comment';
 import EditPostModal from './editPostModal';
+import { AuthContext } from '../../context/authContext';
 
 
 
-export default function PostCard({ post, userIsLoggedIn }) {
+export default function PostCard({ post }) {
     const { author, currentVersion, categories, likes } = post;
     const [modalOpen, setModalOpen] = useState(false);
+    const { user } = useContext(AuthContext);
+    // eslint-disable-next-line no-unused-vars
+    const [isAuthor, setAuthor] = useState(user && author.id == user.userId);
 
 
     const handleEditClick = () => {
@@ -21,7 +25,6 @@ export default function PostCard({ post, userIsLoggedIn }) {
     const handleCloseModal = () => {
         setModalOpen(false);
     };
-
 
     const categoryNames = categories.map(category => category.name).join(', ');
 
@@ -42,9 +45,9 @@ export default function PostCard({ post, userIsLoggedIn }) {
                 <CardContent>
                     <Grid2 container item md={12} alignItems="center" justifyContent="space-between">
                         <Typography variant="h6">
-                            {author.firstName} {author.lastName}
+                            {isAuthor ? 'You' : `${author.firstName} ${author.lastName}`}
                         </Typography>
-                        {userIsLoggedIn && (
+                        {isAuthor && (
                             <IconButton aria-label="edit" onClick={handleEditClick}>
                                 <EditIcon />
                             </IconButton>
@@ -92,6 +95,7 @@ export default function PostCard({ post, userIsLoggedIn }) {
 PostCard.propTypes = {
     post: PropTypes.shape({
         author: PropTypes.shape({
+            id: PropTypes.string.isRequired,
             firstName: PropTypes.string.isRequired,
             lastName: PropTypes.string.isRequired,
         }).isRequired,
@@ -106,5 +110,4 @@ PostCard.propTypes = {
         ).isRequired,
         likes: PropTypes.number.isRequired,
     }).isRequired,
-    userIsLoggedIn: PropTypes.bool.isRequired,
 };

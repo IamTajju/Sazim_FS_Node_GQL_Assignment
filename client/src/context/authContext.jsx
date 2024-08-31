@@ -28,7 +28,7 @@ function authReducer(state, action) {
         case 'LOGIN':
             return {
                 ...state,
-                user: action.payload
+                user: jwtDecode(action.payload.token)
             }
         case 'LOGOUT':
             return {

@@ -10,6 +10,7 @@ const GET_POSTS = gql`
     posts {
       id
       author {
+        id
         firstName
         lastName
       }
@@ -53,7 +54,7 @@ const POST_UPDATED = gql`
 const HomePage = () => {
     const { data, loading, error, subscribeToMore } = useQuery(GET_POSTS);
     const { data: subscriptionData } = useSubscription(POST_UPDATED);
-    
+
 
     const [posts, setPosts] = useState([]);
 
@@ -112,19 +113,18 @@ const HomePage = () => {
     return (
         <Container maxWidth="md" justifyContent="center"> {/* Center content with maxWidth */}
             <Box textAlign="center" marginBottom={4}>
-                <h1>Posts</h1>
+                <h1>All Posts</h1>
             </Box>
             <Box
                 display="flex"
                 flexDirection="column"
-                alignItems="center" // Center items horizontally
-                gap={1} // Optional: space between cards
+                alignItems="center"
+                gap={1}
             >
                 {posts.map(post => (
                     <PostCard
                         key={post.id}
                         post={post}
-                        userIsLoggedIn={true} // Set this based on your authentication logic
                     />
                 ))}
             </Box>
