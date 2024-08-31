@@ -1,13 +1,16 @@
 import { userQueries, userMutations } from './user/index.js';
-// import { bookQueries, bookMutations } from './book';
-// import { publisherQueries, publisherMutations } from './publisher';
+import { postQueries, postMutations } from './post/index.js';
+import { categoryQueries } from './category/index.js'
 
 const resolvers = {
     Query: {
         ...userQueries,
+        ...postQueries,
+        ...categoryQueries,
     },
     Mutation: {
         ...userMutations,
+        ...postMutations,
     },
 };
 

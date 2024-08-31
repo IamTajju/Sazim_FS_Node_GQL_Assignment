@@ -36,7 +36,7 @@ model User {
   activityLog ActivityLog[]
 }
 
-model Categories {
+model Category {
   id    Int    @id @default(autoincrement())
   name  String @unique
   posts Post[]
@@ -53,7 +53,7 @@ model Post {
   currentVersion   PostHistory? @relation("currentVersion", fields: [currentVersionId], references: [id])
   currentVersionId Int?         @unique
 
-  categories Categories[]
+  categories Category[]
 
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
@@ -61,13 +61,14 @@ model Post {
   comments Comment[]
   likes    User[]    @relation("Likes")
 
+  associatedActivity ActivityLog[]
+
   @@index([authorId])
 }
 
 model PostHistory {
   id Int @id @default(autoincrement())
 
-  version Int
   post    Post @relation("postVersions", fields: [postId], references: [id])
   postId  Int
 
@@ -86,14 +87,27 @@ model Comment {
   post      Post     @relation(fields: [postId], references: [id])
   postId    Int
   createdAt DateTime @default(now())
+
+  associatedActivity ActivityLog?
+}
+
+enum ActivityAction {
+  POST
+  LIKE
+  COMMENT
 }
 
 model ActivityLog {
-  id         Int      @id @default(autoincrement())
-  actionType String
-  postId     Int?
-  commentId  Int?
-  userId     Int
-  createdAt  DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id])
+  id         Int            @id @default(autoincrement())
+  actionType ActivityAction
+
+  postId    Int
+  commentId Int? @unique()
+  userId    Int
+
+  createdAt DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id])
+  post    Post     @relation(fields: [postId], references: [id])
+  comment Comment? @relation(fields: [commentId], references: [id])
 }

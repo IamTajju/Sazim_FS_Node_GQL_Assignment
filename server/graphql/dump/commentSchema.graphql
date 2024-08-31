@@ -1,0 +1,7 @@
+type Comment {
+  id: ID!
+  content: String!
+  userId: Int!
+  postId: Int!
+  createdAt: Date!
+}

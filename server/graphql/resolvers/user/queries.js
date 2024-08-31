@@ -10,7 +10,7 @@ const userQueries = {
             return user;
         } catch (error) {
             console.error(error);
-            throw new Error('Error fetching user.');
+            throw error;
         }
     },
     // eslint-disable-next-line no-unused-vars
@@ -20,9 +20,9 @@ const userQueries = {
             return users;
         } catch (error) {
             console.error(error);
-            throw new Error('Error fetching users');
+            throw error;
         }
     },
 };
 
-export default userQueries
+export default userQueries;

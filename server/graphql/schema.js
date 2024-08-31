@@ -20,7 +20,6 @@ gqlFiles.forEach((file) => {
     });
 });
 
-
 const schema = makeExecutableSchema({
     typeDefs,
     resolvers,

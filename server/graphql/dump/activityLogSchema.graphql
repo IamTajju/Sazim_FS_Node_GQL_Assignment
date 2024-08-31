@@ -1,0 +1,15 @@
+enum ActivityAction {
+  POST
+  LIKE
+  COMMENT
+}
+
+
+type ActivityLog {
+  id: ID!
+  actionType: ActivityAction!
+  post: Post!
+  comment: Comment
+  createdAt: Date!
+  user: User!
+}

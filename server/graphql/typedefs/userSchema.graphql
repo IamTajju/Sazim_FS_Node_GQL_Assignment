@@ -12,7 +12,7 @@ type User {
     dateOfBirth: Date!
     gender: Gender!
     email: String!
-    # posts: [Post!]!
+    # posts: [Post]
     # comments: [Comment!]!
     # activityLogs: [ActivityLog!]!
 }

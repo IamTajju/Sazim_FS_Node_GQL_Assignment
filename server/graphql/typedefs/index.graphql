@@ -5,11 +5,24 @@ type Query {
     # Users
     user(id: ID!): User
     users: [User!]!
+
+    # Posts
+    post(id: ID!): Post
+    posts: [Post!]!
+    postsByUser(userId: ID!): [Post!]!
+
+    # Categories
+    categories: [Category]
+
+    # # Comment
+    # commentsForPosts(postId: ID!): [Comment!]!
+    # commentsByUser(userId: ID!): [Comment!]!
 }
 
 type Mutation {
     registerUser(registerInput: UserCreateInput): AuthPayload # JWT token as a string
     loginUser(email: String!, password: String!): AuthPayload # JWT token as a string
+    createPost(input: CreatePostInput!): Post!
 }
 
 
