@@ -1,7 +1,7 @@
 type Comment {
   id: ID!
   content: String!
-  userId: Int!
-  postId: Int!
+  author: User
   createdAt: Date!
+  post: Post
 }

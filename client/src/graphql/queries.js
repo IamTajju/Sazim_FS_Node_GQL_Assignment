@@ -19,6 +19,7 @@ export const GET_POST = gql`
       updatedAt
       createdAt
       likes
+      
     }
   }
 `;
@@ -54,4 +55,23 @@ export const GET_CATEGORIES = gql`
     }
   }
 `;
+
+export const GET_COMMENTS_FOR_POST = gql`
+  query CommentsForPosts($postId: ID!) {
+    commentsForPosts(postId: $postId) {
+      id
+      content
+      author {
+        id
+        firstName
+        lastName
+      }
+      createdAt
+      post {
+        id
+      }
+    }
+  }
+`;
+
 

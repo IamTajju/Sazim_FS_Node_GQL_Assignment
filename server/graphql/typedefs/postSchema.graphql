@@ -5,7 +5,6 @@ type Post {
   categories: [Category!]!
   updatedAt: Date!
   createdAt: Date!
-  # comments: [Comment]
   likes: Int!
 }
 

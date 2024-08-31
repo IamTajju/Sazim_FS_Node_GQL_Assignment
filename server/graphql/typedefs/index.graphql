@@ -14,9 +14,8 @@ type Query {
     # Categories
     categories: [Category]
 
-    # # Comment
-    # commentsForPosts(postId: ID!): [Comment!]!
-    # commentsByUser(userId: ID!): [Comment!]!
+    # Comment
+    commentsForPosts(postId: ID!): [Comment!]!
 }
 
 type Mutation {
@@ -25,7 +24,7 @@ type Mutation {
     createPost(input: CreatePostInput!): Post!
     updatePost(input: UpdatePostInput!): Post!
     revertToPreviousVersion(postId: ID!, versionId: ID!): Post!
-
+    addComment(content: String!, postId: ID!): Comment!
 }
 
 type Subscription {
