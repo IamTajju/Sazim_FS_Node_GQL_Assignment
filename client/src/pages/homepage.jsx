@@ -17,6 +17,7 @@ const GET_POSTS = gql`
         content
       }
       categories {
+        id
         name
       }
       updatedAt
@@ -48,9 +49,11 @@ const POST_UPDATED = gql`
   }
 `;
 
+
 const HomePage = () => {
     const { data, loading, error, subscribeToMore } = useQuery(GET_POSTS);
     const { data: subscriptionData } = useSubscription(POST_UPDATED);
+    
 
     const [posts, setPosts] = useState([]);
 
