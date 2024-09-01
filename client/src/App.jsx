@@ -6,6 +6,7 @@ import RegistrationPage from './pages/registrationPage';
 import { CategoriesProvider } from './context/categoriesContext';
 import PrivateRoutes from './components/auth/protectedRoute';
 import PostPage from './pages/postPage';
+import ActivityLogPage from './pages/activityLogPage';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route element={<PrivateRoutes />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/post/:id" element={<PostPage />} />
+            <Route path="/activity-log" element={<ActivityLogPage />} />
 
           </Route>
           <Route path="/login" element={<LoginPage />} />

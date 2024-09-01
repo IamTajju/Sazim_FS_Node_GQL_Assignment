@@ -87,3 +87,29 @@ export const GET_POST_HISTORIES = gql`
 `;
 
 
+export const GET_ACTIVITY_LOGS = gql`
+    query GetActivityLogs {
+        getActivityLogs {
+            id
+            actionType
+            createdAt
+            post {
+                id
+                author {
+                    id
+                    firstName
+                    lastName
+                }
+                currentVersion {
+                    content
+                }
+                categories {
+                    id
+                    name
+                }
+                likes
+                likedByCurrentUser
+            }
+        }
+    }
+`;

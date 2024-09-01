@@ -29,7 +29,7 @@ export default function NavBar() {
                         </>
                     ) : (
                         <>
-                            <Button color="inherit" href='/activitylog'>Activity Log</Button>
+                            <Button color="inherit" href='/activity-log'>Activity Log</Button>
                             <Button color="inherit" onClick={onLogout}>Logout</Button>
                         </>
                     )}
