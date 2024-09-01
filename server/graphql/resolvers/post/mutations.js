@@ -1,5 +1,7 @@
 import { postIncludeOptions, postMapLikesCount } from '../utils.js' // Adjust the path as needed
 import { pubsub, POST_UPDATED, POST_DELETED } from './subscriptions.js';
+import { logActivity } from '../../../services/activityService.js';
+import { ActivityAction } from '@prisma/client';
 
 const postMutations = {
     createPost: async (_, { input }, { user, prisma }) => {
@@ -49,6 +51,7 @@ const postMutations = {
             const postWithLikes = postMapLikesCount(postUpdated, user.userId);
             pubsub.publish(POST_UPDATED, { postUpdated: postWithLikes });
             // Map likes count to the post object
+            logActivity(ActivityAction.POST, user.userId, postWithLikes.id)
             return postWithLikes;
         } catch (error) {
             console.error(error);
@@ -226,6 +229,8 @@ const postMutations = {
             where: { id: postIdInt },
             include: postIncludeOptions
         });
+
+        logActivity(ActivityAction.LIKE, userId, postIdInt)
 
         return postMapLikesCount(post, userId);
     },

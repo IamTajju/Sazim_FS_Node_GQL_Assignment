@@ -17,6 +17,9 @@ type Query {
 
     # Comment
     commentsForPosts(postId: ID!): [Comment!]!
+
+    # Activity Log
+    getActivityLogs: [ActivityLog!]
 }
 
 type Mutation {

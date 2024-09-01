@@ -1,3 +1,6 @@
+import { logActivity } from '../../../services/activityService.js';
+import { ActivityAction } from '@prisma/client';
+
 const commentMutations = {
     addComment: async (_, args, { user, prisma }) => {
         const { content, postId } = args;
@@ -16,6 +19,7 @@ const commentMutations = {
                     post: true,
                 },
             });
+            logActivity(ActivityAction.COMMENT, user.userId, Number(postId))
             return newComment;
         } catch (error) {
             console.error(error);

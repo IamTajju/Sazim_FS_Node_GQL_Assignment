@@ -4,12 +4,10 @@ enum ActivityAction {
   COMMENT
 }
 
-
 type ActivityLog {
-  id: ID!
+  id: Int!
   actionType: ActivityAction!
-  post: Post!
-  comment: Comment
-  createdAt: Date!
-  user: User!
+  user: User!         
+  post: Post!     
+  createdAt: Date!    
 }

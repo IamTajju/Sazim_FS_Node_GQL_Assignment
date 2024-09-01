@@ -88,7 +88,6 @@ model Comment {
   postId    Int
   createdAt DateTime @default(now())
 
-  associatedActivity ActivityLog?
 }
 
 enum ActivityAction {
@@ -102,12 +101,10 @@ model ActivityLog {
   actionType ActivityAction
 
   postId    Int
-  commentId Int? @unique()
   userId    Int
 
   createdAt DateTime @default(now())
 
   user    User     @relation(fields: [userId], references: [id])
   post    Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  comment Comment? @relation(fields: [commentId], references: [id])
 }
