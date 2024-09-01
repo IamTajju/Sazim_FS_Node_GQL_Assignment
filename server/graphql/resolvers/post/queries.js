@@ -11,7 +11,7 @@ const postQueries = {
                 where: { id: Number(id) },
                 include: postIncludeOptions
             });
-            return postMapLikesCount(post);
+            return postMapLikesCount(post, user.userId);
         } catch (error) {
             console.error(error);
             throw error;
@@ -28,7 +28,7 @@ const postQueries = {
             });
 
             // Use helper function to transform the posts
-            return postMapLikesCount(posts);
+            return postMapLikesCount(posts, user.userId);
         } catch (error) {
             console.error(error);
             throw error;
@@ -45,7 +45,7 @@ const postQueries = {
                 include: postIncludeOptions
             });
             // Use helper function to transform the posts
-            return postMapLikesCount(postsByUser);
+            return postMapLikesCount(postsByUser, user.userId);
         } catch (error) {
             console.log(error);
             throw error;
@@ -74,7 +74,7 @@ const postQueries = {
             return postHistories;
         } catch (error) {
             console.error('Error fetching post histories:', error);
-            throw new Error('Unable to fetch post histories');
+            throw error;
         }
     },
 };

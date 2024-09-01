@@ -26,6 +26,7 @@ type Mutation {
     updatePost(input: UpdatePostInput!): Post!
     revertToPreviousVersion(postId: ID!, versionId: ID!): Post!
     addComment(content: String!, postId: ID!): Comment!
+    likePost(postId: ID!): Post!
 }
 
 type Subscription {

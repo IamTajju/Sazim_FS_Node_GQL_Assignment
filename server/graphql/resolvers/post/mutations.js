@@ -46,7 +46,7 @@ const postMutations = {
                 where: { id: post.id },
                 include: postIncludeOptions,
             });
-            const postWithLikes = postMapLikesCount(postUpdated);
+            const postWithLikes = postMapLikesCount(postUpdated, user.userId);
             pubsub.publish(POST_UPDATED, { postUpdated: postWithLikes });
             // Map likes count to the post object
             return postWithLikes;
@@ -111,7 +111,7 @@ const postMutations = {
             });
 
             // Map likes count and publish the updated post
-            const postWithLikes = postMapLikesCount(post);
+            const postWithLikes = postMapLikesCount(post, user.userId);
             pubsub.publish(POST_UPDATED, { postUpdated: postWithLikes });
 
             return postWithLikes;
@@ -167,7 +167,7 @@ const postMutations = {
             });
 
             // Map likes count and publish the updated post
-            const postWithLikes = postMapLikesCount(updatedPost);
+            const postWithLikes = postMapLikesCount(updatedPost, user.userId);
             pubsub.publish(POST_UPDATED, { postUpdated: postWithLikes });
 
             return postWithLikes;
@@ -175,6 +175,59 @@ const postMutations = {
             console.error(error);
             throw new Error('Failed to revert to previous version');
         }
+    },
+    likePost: async (_, { postId }, { user, prisma }) => {
+        // if (!user) {
+        //     throw new Error('Not Authenticated');
+        // }
+        const userId = 1;
+        const postIdInt = Number(postId);
+
+        // Check if user already liked the post
+        const existingLike = await prisma.post.findFirst({
+            where: {
+                id: postIdInt,
+                likes: {
+                    some: {
+                        id: userId
+                    }
+                }
+            }
+        });
+
+        if (existingLike) {
+            // Unlike (remove the like) if the user has already liked the post
+            await prisma.post.update({
+                where: { id: postIdInt },
+                data: {
+                    likes: {
+                        disconnect: {
+                            id: userId
+                        }
+                    }
+                }
+            });
+        } else {
+            // Add like to post
+            await prisma.post.update({
+                where: { id: postIdInt },
+                data: {
+                    likes: {
+                        connect: {
+                            id: userId
+                        }
+                    }
+                }
+            });
+        }
+
+        // Return updated post
+        const post = await prisma.post.findUnique({
+            where: { id: postIdInt },
+            include: postIncludeOptions
+        });
+
+        return postMapLikesCount(post, userId);
     }
 };
 

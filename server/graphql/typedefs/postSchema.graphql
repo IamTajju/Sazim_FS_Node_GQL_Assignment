@@ -6,6 +6,7 @@ type Post {
   updatedAt: Date!
   createdAt: Date!
   likes: Int!
+  likedByCurrentUser: Boolean!
 }
 
 
