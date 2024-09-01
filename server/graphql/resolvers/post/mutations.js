@@ -121,8 +121,8 @@ const postMutations = {
         }
     },
 
-    revertToPreviousVersion: async (_, { input }, { user, prisma }) => {
-        const { postId, postHistoryId } = input
+    revertToPreviousVersion: async (_, args, { user, prisma }) => {
+        const { postId, versionId } = args;
         if (!user) {
             throw new Error('Not Authenticated');
         }
@@ -142,7 +142,7 @@ const postMutations = {
             }
             // Fetch the specified PostHistory entry and ensure it's associated with the given postId
             const postHistory = await prisma.postHistory.findUnique({
-                where: { id: Number(postHistoryId) },
+                where: { id: Number(versionId) },
                 include: {
                     post: true // Include the post associated with this history entry
                 }
@@ -161,7 +161,7 @@ const postMutations = {
             const updatedPost = await prisma.post.update({
                 where: { id: Number(postId) },
                 data: {
-                    currentVersion: { connect: { id: Number(postHistoryId) } }
+                    currentVersion: { connect: { id: Number(versionId) } }
                 },
                 include: postIncludeOptions
             });

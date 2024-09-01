@@ -10,6 +10,7 @@ type Query {
     post(id: ID!): Post
     posts: [Post!]!
     postsByUser: [Post!]!
+    getPostHistories(postId: ID!): [PostHistory!]!
 
     # Categories
     categories: [Category]

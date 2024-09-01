@@ -74,4 +74,14 @@ export const GET_COMMENTS_FOR_POST = gql`
   }
 `;
 
+export const GET_POST_HISTORIES = gql`
+  query GetPostHistories($postId: ID!) {
+    getPostHistories(postId: $postId) {  # Ensure this matches your schema
+      id
+      content
+      createdAt
+    }
+  }
+`;
+
 

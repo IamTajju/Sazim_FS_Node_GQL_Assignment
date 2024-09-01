@@ -70,3 +70,26 @@ export const ADD_COMMENT = gql`
     }
   }
 `;
+
+export const REVERT_TO_PREVIOUS_VERSION = gql`
+  mutation RevertToPreviousVersion($postId: ID!, $versionId: ID!) {
+    revertToPreviousVersion(postId: $postId, versionId: $versionId) {
+      id
+      author{
+        id
+        firstName
+        lastName
+      }
+      currentVersion {
+          content
+      }
+      categories {
+          id
+          name
+      }
+      updatedAt
+      createdAt
+      likes
+    }
+  }
+`;

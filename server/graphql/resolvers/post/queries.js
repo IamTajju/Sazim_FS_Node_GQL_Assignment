@@ -51,6 +51,32 @@ const postQueries = {
             throw error;
         }
     },
+    getPostHistories: async (_, { postId }, { user, prisma }) => {
+        if (!user) {
+            throw new Error('Not Authenticated');
+        }
+        try {
+            // Fetch post histories for a specific post ID
+            const postHistories = await prisma.postHistory.findMany({
+                where: {
+                    postId: parseInt(postId),
+                },
+                orderBy: {
+                    createdAt: 'desc', // Order by creation date descending (most recent first)
+                },
+                select: {
+                    id: true,
+                    content: true,
+                    createdAt: true,
+                },
+            });
+
+            return postHistories;
+        } catch (error) {
+            console.error('Error fetching post histories:', error);
+            throw new Error('Unable to fetch post histories');
+        }
+    },
 };
 
 export default postQueries;
