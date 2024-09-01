@@ -16,99 +16,106 @@ GoodWords is a blogging platform with a modern technology stack. This documentat
 ## Project Structure
 ```
 ├── client
-│   ├── README.md
-│   ├── dist
-│   │   ├── assets
-│   │   │   ├── index-BPvgi06w.css
-│   │   │   └── index-PEAIHBCj.js
-│   │   ├── index.html
-│   │   └── vite.svg
-│   ├── eslint.config.js
-│   ├── index.html
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── public
-│   │   └── vite.svg
-│   ├── src
-│   │   ├── App.css
-│   │   ├── App.jsx
-│   │   ├── apolloClient.js
-│   │   ├── assets
-│   │   │   └── react.svg
-│   │   ├── components
-│   │   │   ├── auth
-│   │   │   │   ├── loginForm.jsx
-│   │   │   │   ├── redirectLink.jsx
-│   │   │   │   └── registrationForm.jsx
-│   │   │   ├── common
-│   │   │   │   ├── form.jsx
-│   │   │   │   ├── multiStepForm.jsx
-│   │   │   │   └── navbar.jsx
-│   │   │   └── posts
-│   │   │       ├── editPostModal.jsx
-│   │   │       └── postCard.jsx
-│   │   ├── context
-│   │   │   └── authContext.jsx
-│   │   ├── index.css
-│   │   ├── main.jsx
-│   │   ├── pages
-│   │   │   ├── homepage.jsx
-│   │   │   ├── loginPage.jsx
-│   │   │   └── registrationPage.jsx
-│   │   └── utils
-│   └── vite.config.js
+│   ├── README.md
+│   ├── dist
+│   │   ├── assets
+│   │   │   ├── index-6ZBxokAm.js
+│   │   │   └── index-DZriRxxp.css
+│   │   ├── index.html
+│   │   └── vite.svg
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── public
+│   │   └── vite.svg
+│   ├── src
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── apolloClient.js
+│   │   ├── assets
+│   │   │   └── react.svg
+│   │   ├── components
+│   │   │   ├── auth
+│   │   │   │   ├── loginForm.jsx
+│   │   │   │   ├── protectedRoute.jsx
+│   │   │   │   ├── redirectLink.jsx
+│   │   │   │   └── registrationForm.jsx
+│   │   │   ├── common
+│   │   │   │   ├── form.jsx
+│   │   │   │   ├── multiStepForm.jsx
+│   │   │   │   └── navbar.jsx
+│   │   │   └── posts
+│   │   │       ├── commentCard.jsx
+│   │   │       ├── postCard.jsx
+│   │   │       └── postMutationModal.jsx
+│   │   ├── context
+│   │   │   ├── authContext.jsx
+│   │   │   └── categoriesContext.jsx
+│   │   ├── graphql
+│   │   │   ├── mutations.js
+│   │   │   ├── queries.js
+│   │   │   └── subscriptions.js
+│   │   ├── index.css
+│   │   ├── main.jsx
+│   │   ├── pages
+│   │   │   ├── activityLogPage.jsx
+│   │   │   ├── homePage.jsx
+│   │   │   ├── loginPage.jsx
+│   │   │   ├── postPage.jsx
+│   │   │   └── registrationPage.jsx
+│   │   └── utils
+│   └── vite.config.js
 └── server
     ├── app.js
     ├── config
-    │   └── environment
-    │       └── index.js
+    │   └── environment
+    │       └── index.js
     ├── eslint.config.js
     ├── graphql
-    │   ├── dump
-    │   │   ├── activityLogSchema.graphql
-    │   │   └── commentSchema.graphql
-    │   ├── index.js
-    │   ├── resolvers
-    │   │   ├── category
-    │   │   │   ├── index.js
-    │   │   │   └── queries.js
-    │   │   ├── index.js
-    │   │   ├── post
-    │   │   │   ├── index.js
-    │   │   │   ├── mutations.js
-    │   │   │   ├── queries.js
-    │   │   │   └── subscriptions.js
-    │   │   ├── user
-    │   │   │   ├── index.js
-    │   │   │   ├── mutations.js
-    │   │   │   └── queries.js
-    │   │   └── utils.js
-    │   ├── schema.js
-    │   └── typedefs
-    │       ├── categorySchema.graphql
-    │       ├── index.graphql
-    │       ├── postSchema.graphql
-    │       └── userSchema.graphql
+    │   ├── context.js
+    │   ├── index.js
+    │   ├── resolvers
+    │   │   ├── activityLog
+    │   │   │   ├── index.js
+    │   │   │   └── queries.js
+    │   │   ├── category
+    │   │   │   ├── index.js
+    │   │   │   └── queries.js
+    │   │   ├── comment
+    │   │   │   ├── index.js
+    │   │   │   ├── mutations.js
+    │   │   │   └── queries.js
+    │   │   ├── index.js
+    │   │   ├── post
+    │   │   │   ├── index.js
+    │   │   │   ├── mutations.js
+    │   │   │   ├── queries.js
+    │   │   │   └── subscriptions.js
+    │   │   ├── user
+    │   │   │   ├── index.js
+    │   │   │   ├── mutations.js
+    │   │   │   └── queries.js
+    │   │   └── utils.js
+    │   ├── schema.js
+    │   └── typedefs
+    │       ├── activityLogSchema.graphql
+    │       ├── categorySchema.graphql
+    │       ├── commentSchema.graphql
+    │       ├── index.graphql
+    │       ├── postSchema.graphql
+    │       └── userSchema.graphql
     ├── index.js
     ├── package-lock.json
     ├── package.json
-    └── prisma
-        ├── db.js
-        ├── migrations
-        │   ├── 20240830110558_initial_migration_all_models
-        │   │   └── migration.sql
-        │   ├── 20240831103057_activity_log_action_type_changed_to_enum
-        │   │   └── migration.sql
-        │   ├── 20240831103932_updated_activity_log_associations
-        │   │   └── migration.sql
-        │   ├── 20240831112223_updated_categories_table_to_category
-        │   │   └── migration.sql
-        │   ├── 20240831120455_remove_version_id_from_post_history
-        │   │   └── migration.sql
-        │   └── migration_lock.toml
-        ├── schema.prisma
-        └── seed.js
-
+    ├── prisma
+    │   ├── db.js
+    │   ├── migrations
+    │   │   └── migration_lock.toml
+    │   ├── schema.prisma
+    │   └── seed.js
+    └── services
+        └── activityService.js
 ```
 
 ## Setup Instructions
