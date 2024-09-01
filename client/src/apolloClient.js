@@ -4,18 +4,19 @@ import { setContext } from '@apollo/client/link/context';
 import { createClient } from 'graphql-ws';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 
+
 const httpLink = createHttpLink({
-    uri: "http://localhost:8000/graphql"
+    uri: import.meta.env.VITE_GRAPHQL_HTTP_URI
+
 });
 
 // WebSocket link for subscriptions
 const wsLink = new GraphQLWsLink(createClient({
-    url: 'ws://localhost:8000/graphql',
+    url: import.meta.env.VITE_GRAPHQL_WS_URI,
     options: {
         reconnect: true,
         connectionParams: {
-            // Include any required headers or authentication tokens here
-            // authToken: localStorage.getItem("token") || ""
+            authToken: localStorage.getItem("token") || ""
         }
     }
 }));
