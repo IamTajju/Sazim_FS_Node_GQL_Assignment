@@ -177,10 +177,10 @@ const postMutations = {
         }
     },
     likePost: async (_, { postId }, { user, prisma }) => {
-        // if (!user) {
-        //     throw new Error('Not Authenticated');
-        // }
-        const userId = 1;
+        if (!user) {
+            throw new Error('Not Authenticated');
+        }
+        const userId = user.userId;
         const postIdInt = Number(postId);
 
         // Check if user already liked the post

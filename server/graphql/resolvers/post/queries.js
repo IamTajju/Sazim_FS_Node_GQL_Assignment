@@ -27,7 +27,6 @@ const postQueries = {
                 include: postIncludeOptions
             });
 
-            // Use helper function to transform the posts
             return postMapLikesCount(posts, user.userId);
         } catch (error) {
             console.error(error);

@@ -3,20 +3,37 @@ import React, { useState, useContext } from 'react'
 import { Card, CardContent, Typography, Chip, IconButton, Grid2, Link } from '@mui/material';
 import PropTypes from 'prop-types';
 import EditIcon from '@mui/icons-material/Edit';
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import CommentIcon from '@mui/icons-material/Comment';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PostMutationModal from './postMutationModal';
 import { AuthContext } from '../../context/authContext';
+import { useMutation } from '@apollo/client';
+import { LIKE_POST } from '../../graphql/mutations';
 
 
 
 export default function PostCard({ post, inPage }) {
-    const {id, author, currentVersion, categories, likes } = post;
+    const { id, author, currentVersion, categories, likes, likedByCurrentUser } = post;
     const [modalOpen, setModalOpen] = useState(false);
     const { user } = useContext(AuthContext);
     // eslint-disable-next-line no-unused-vars
     const [isAuthor, setAuthor] = useState(user && author.id == user.userId);
+    const [likeStatus, setLikeStatus] = useState(likedByCurrentUser);
+    const [likeCount, setLikeCount] = useState(likes);
+
+
+    const [likePost] = useMutation(LIKE_POST, {
+        variables: { postId: id },
+        onCompleted: (data) => {
+            setLikeStatus(data.likePost.likedByCurrentUser);
+            setLikeCount(data.likePost.likes);
+        },
+        onError: (error) => {
+            console.error('Error liking the post:', error);
+        }
+    });
 
 
     const handleEditClick = () => {
@@ -25,6 +42,10 @@ export default function PostCard({ post, inPage }) {
 
     const handleCloseModal = () => {
         setModalOpen(false);
+    };
+
+    const handleLikeClick = () => {
+        likePost();
     };
 
     const categoryNames = categories.map(category => category.name).join(', ');
@@ -69,10 +90,10 @@ export default function PostCard({ post, inPage }) {
 
                     <Grid2 container justifyContent="space-between" alignItems="center">
                         <Grid2 container item alignItems="center" justifyContent="space-between">
-                            <IconButton aria-label="like">
-                                <ThumbUpAltIcon />
+                            <IconButton aria-label="like" onClick={handleLikeClick}>
+                                {likeStatus ? <ThumbUpIcon /> : <ThumbUpAltOutlinedIcon />}
                             </IconButton>
-                            <Typography variant="body2">{likes} likes</Typography>
+                            <Typography variant="body2">{likeCount} likes</Typography>
                         </Grid2>
                         {!inPage ? (
                             <Grid2 container item alignItems="center" justifyContent="space-between">
@@ -122,6 +143,7 @@ PostCard.propTypes = {
             })
         ).isRequired,
         likes: PropTypes.number.isRequired,
+        likedByCurrentUser: PropTypes.bool,
     }).isRequired,
     inPage: PropTypes.bool,
 };

@@ -2,6 +2,7 @@ export const postIncludeOptions = {
     author: true,
     currentVersion: true,
     categories: true,
+    likes: true,
     _count: {
         select: {
             likes: true, // Count the number of likes
@@ -12,8 +13,7 @@ export const postIncludeOptions = {
 export const postMapLikesCount = (posts, userId) => {
     // Helper function to determine if the current user has liked the post
     const isLikedByCurrentUser = (post, userId) => {
-        // Ensure that post.likes is an array before calling .some()
-        return Array.isArray(post.likes) && post.likes.some((like) => like.id === userId);
+        return post.likes.some((like) => like.id === userId);
     };
 
     if (Array.isArray(posts)) {

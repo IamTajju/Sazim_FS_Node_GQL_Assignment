@@ -30,6 +30,7 @@ export const UPDATE_POST = gql`
             updatedAt
             createdAt
             likes
+            likedByCurrentUser
         }
     }
 `;
@@ -90,6 +91,16 @@ export const REVERT_TO_PREVIOUS_VERSION = gql`
       updatedAt
       createdAt
       likes
+    }
+  }
+`;
+
+export const LIKE_POST = gql`
+  mutation LikePost($postId: ID!) {
+    likePost(postId: $postId) {
+      id
+      likes
+      likedByCurrentUser
     }
   }
 `;

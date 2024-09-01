@@ -19,6 +19,7 @@ export const GET_POST = gql`
       updatedAt
       createdAt
       likes
+      likedByCurrentUser
       
     }
   }
@@ -43,6 +44,7 @@ export const GET_POSTS = gql`
       updatedAt
       createdAt
       likes
+      likedByCurrentUser
     }
   }
 `;
