@@ -1,5 +1,5 @@
 import { postIncludeOptions, postMapLikesCount } from '../utils.js' // Adjust the path as needed
-import { pubsub, POST_UPDATED } from './subscriptions.js';
+import { pubsub, POST_UPDATED, POST_DELETED } from './subscriptions.js';
 
 const postMutations = {
     createPost: async (_, { input }, { user, prisma }) => {
@@ -228,7 +228,48 @@ const postMutations = {
         });
 
         return postMapLikesCount(post, userId);
-    }
+    },
+    deletePost: async (_, { postId }, { user, prisma }) => {
+        if (!user) {
+            throw new Error('Not Authenticated');
+        }
+
+        const userId = user.userId;
+        const postIdInt = Number(postId);
+
+        try {
+            // Check if the user is the author of the post or has the required permission
+            const post = await prisma.post.findUnique({
+                where: { id: postIdInt },
+                select: { authorId: true }
+            });
+
+            if (!post) {
+                throw new Error('Post not found');
+            }
+
+            if (post.authorId !== userId) {
+                throw new Error('Not authorized to delete this post');
+            }
+
+            // Delete the post
+            await prisma.post.delete({
+                where: { id: postIdInt }
+            });
+
+            // Optionally, you can publish an event for the deleted post
+            pubsub.publish(POST_DELETED, { postId: postIdInt });
+
+            return {
+                success: true,
+                message: 'Post deleted successfully',
+                postId: postIdInt
+            };
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    },
 };
 
 

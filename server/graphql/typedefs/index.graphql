@@ -27,10 +27,12 @@ type Mutation {
     revertToPreviousVersion(postId: ID!, versionId: ID!): Post!
     addComment(content: String!, postId: ID!): Comment!
     likePost(postId: ID!): Post!
+    deletePost(postId: ID!): DeletePostResponse!
 }
 
 type Subscription {
   postUpdated: Post!
+  postDeleted: DeletePostResponse!
 }
 
 

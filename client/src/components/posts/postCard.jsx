@@ -10,7 +10,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PostMutationModal from './postMutationModal';
 import { AuthContext } from '../../context/authContext';
 import { useMutation } from '@apollo/client';
-import { LIKE_POST } from '../../graphql/mutations';
+import { LIKE_POST, DELETE_POST } from '../../graphql/mutations';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -22,6 +23,7 @@ export default function PostCard({ post, inPage }) {
     const [isAuthor, setAuthor] = useState(user && author.id == user.userId);
     const [likeStatus, setLikeStatus] = useState(likedByCurrentUser);
     const [likeCount, setLikeCount] = useState(likes);
+    let navigate = useNavigate();
 
 
     const [likePost] = useMutation(LIKE_POST, {
@@ -47,6 +49,27 @@ export default function PostCard({ post, inPage }) {
     const handleLikeClick = () => {
         likePost();
     };
+
+    const handleDeleteClick = () => {
+        if (window.confirm('Are you sure you want to delete this post?')) {
+            deletePost();
+        }
+    };
+
+    const [deletePost] = useMutation(DELETE_POST, {
+        variables: { postId: id },
+        onCompleted: (data) => {
+            if (data.deletePost.success) {
+                alert('Post deleted successfully');
+                navigate("/");
+            } else {
+                alert(data.deletePost.message || 'Failed to delete post');
+            }
+        },
+        onError: (error) => {
+            console.error('Error deleting the post:', error);
+        }
+    });
 
     const categoryNames = categories.map(category => category.name).join(', ');
 
@@ -104,7 +127,7 @@ export default function PostCard({ post, inPage }) {
                             </Grid2>
                         ) : isAuthor && (
                             <Grid2 container item alignItems="center" justifyContent="space-between">
-                                <IconButton aria-label="delete" color="error">
+                                <IconButton aria-label="delete" color="error" onClick={handleDeleteClick}>
                                     <DeleteIcon />
                                 </IconButton>
                                 {/* Optionally add more elements or functionality here */}
