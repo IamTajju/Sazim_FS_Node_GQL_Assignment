@@ -112,13 +112,12 @@ GoodWords is a blogging platform with a modern technology stack. This documentat
 ```
 
 ## Setup Instructions
+`NOTE:` Repeat these steps <b>separately</b> for <b>server</b> and <b>client</b> folders, PLEASE set up appropriate env variable before starting the app.
+
 ### 1. Environment Variables:
 * Use .env.example to identify required environment variables. Create a .env file with necessary configurations.
-### 2. Database Setup:
-* Run prisma migrate dev to apply migrations.
-* Seed the database using prisma seed.
 
-### 3. Running the Project:
+### 2. Dependencies:
 Initialize package.json for client and server directories separately.
 ```
 npm init
@@ -126,8 +125,14 @@ npm init
 ```
 npm install
 ```
+### 3. Database Setup:
+* Run prisma migrate dev to apply migrations.
+* Seed the database using prisma seed.
+
+### 4. Running the Project
 Server: Navigate to the server directory and run npm install followed by npm run dev.
 Client: Navigate to the client directory and run npm install followed by npm run dev.
+`Ensure the correct Graphql http link and ws link (the server uri) are set in client/.env `
 
 ## Implementation
 
