@@ -136,10 +136,13 @@ npm init
 npm install
 ```
 ### 3. Database Setup:
+* Create fresh Postgres DB
+* Provide creds in server/env `DATABASE_URL="postgresql://<DB_USER>:<PASS>@<HOST>:<PORT>/<DB_NAME>?schema=public"`
 * CD into the server folder
 * Run `npx prisma migrate dev` to apply migrations.
 * Generate Prisma Client: `npx prisma generate`
 * Seed the database using: `node prisma/seed.js`
+
 
 ### 4. Running the Project
 Server: Navigate to the server directory and run npm install followed by npm run dev.
