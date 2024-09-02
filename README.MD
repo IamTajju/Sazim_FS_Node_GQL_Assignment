@@ -136,8 +136,10 @@ npm init
 npm install
 ```
 ### 3. Database Setup:
-* Run prisma migrate dev to apply migrations.
-* Seed the database using prisma seed.
+* CD into the server folder
+* Run `npx prisma migrate dev` to apply migrations.
+* Generate Prisma Client: `npx prisma generate`
+* Seed the database using: `node prisma/seed.js`
 
 ### 4. Running the Project
 Server: Navigate to the server directory and run npm install followed by npm run dev.
