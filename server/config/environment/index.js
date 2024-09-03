@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const port = process.env.PORT;
+const client_origin = process.env.CLIENT_ORIGIN
 
 // You may use this as a boolean value for different situations
 const env = {
@@ -12,4 +13,4 @@ const env = {
     production: process.env.NODE_ENV === 'production',
 };
 
-export { port, env };
+export { port, env, client_origin };
